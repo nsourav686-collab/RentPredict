@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentPredict – Find Your Perfect Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --red:     #e8001d;
+            --red-dk:  #b5001a;
+            --navy:    #0d1b3e;
+            --slate:   #2d3a52;
+            --sky:     #f0f4ff;
+            --white:   #ffffff;
+            --gray:    #6b7a99;
+            --border:  #dde3f0;
+            --shadow:  0 4px 24px rgba(13,27,62,0.10);
+            --shadow-lg: 0 12px 40px rgba(13,27,62,0.16);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--sky);
+            min-height: 100vh;
+            color: var(--navy);
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            background: var(--navy);
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+        }
+
+        .nav-logo {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--white);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .nav-logo span { color: var(--red); }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 28px;
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-welcome {
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+        }
+
+        .nav-welcome strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.78);
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.10);
+            color: var(--white);
+        }
+
+        .nav-link.active {
+            background: rgba(232,0,29,0.18);
+            color: var(--white);
+        }
+
+        .btn-logout,
+        .btn-signup {
+            background: var(--red);
+            color: var(--white);
+            text-decoration: none;
+            padding: 7px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-logout:hover,
+        .btn-signup:hover { background: var(--red-dk); }
+
+        /* ── HERO BANNER ── */
+        .hero {
+            background: linear-gradient(120deg, var(--navy) 0%, #1a3066 60%, #c0001a 100%);
+            padding: 52px 32px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(232,0,29,0.25);
+            color: #ff6b7a;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(232,0,29,0.3);
+        }
+
+        .hero h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(28px, 5vw, 46px);
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.15;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span { color: #ff6b7a; }
+
+        .hero p {
+            color: rgba(255,255,255,0.65);
+            font-size: 16px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* ── STATS ROW ── */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.55);
+            margin-top: 2px;
+        }
+
+        /* ── FORM CARD ── */
+        .form-wrapper {
+            max-width: 820px;
+            margin: -44px auto 32px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .form-card-header {
+            background: var(--red);
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-card-header h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .form-card-header .icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .form-body {
+            padding: 28px;
+        }
+
+        /* ── GRID LAYOUT ── */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field-group.full { grid-column: 1 / -1; }
+        .field-group.half { grid-column: span 1; }
+
+        label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--slate);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--navy);
+            background: var(--white);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(232,0,29,0.08);
+        }
+
+        input[type="number"]::placeholder { color: #b0bcd4; }
+
+        .select-wrap {
+            position: relative;
+        }
+
+        .select-wrap::after {
+            content: '▾';
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        /* ── AREA SEARCH ── */
+        .area-search-box {
+            display: flex;
+            gap: 8px;
+        }
+
+        .area-search-box input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--navy);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .area-search-box input:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(232,0,29,0.08);
+        }
+
+        /* ── DIVIDER ── */
+        .form-divider {
+            border: none;
+            border-top: 1.5px dashed var(--border);
+            margin: 22px 0;
+        }
+
+        .section-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--slate);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── SUBMIT BUTTON ── */
+        .btn-predict {
+            width: 100%;
+            padding: 15px;
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 24px;
+            letter-spacing: 0.3px;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(232,0,29,0.30);
+        }
+
+        .btn-predict:hover {
+            background: var(--red-dk);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(232,0,29,0.38);
+        }
+
+        .btn-predict:active { transform: translateY(0); }
+
+        .btn-predict .arrow { margin-left: 8px; }
+
+        /* ── TRUST BAR ── */
+        .trust-bar {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            padding: 20px;
+            background: var(--sky);
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .trust-item .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--red);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── HOW IT WORKS ── */
+        .how-section {
+            max-width: 820px;
+            margin: 0 auto 48px;
+            padding: 0 20px;
+        }
+
+        .how-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .step-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 22px 18px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 3px solid var(--red);
+            transition: transform 0.2s;
+        }
+
+        .step-card:hover { transform: translateY(-3px); }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            background: var(--red);
+            color: var(--white);
+            border-radius: 50%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .step-card h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .step-card p {
+            font-size: 13px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* -- PROFESSIONAL CONTENT SECTIONS -- */
+        .content-section,
+        .quick-links-section {
+            max-width: 1120px;
+            margin: 0 auto 48px;
+            padding: 0 20px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(22px, 3vw, 32px);
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.4px;
+        }
+
+        .section-heading p {
+            max-width: 620px;
+            margin: 8px auto 0;
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .quick-grid,
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .quick-card,
+        .feature-card,
+        .info-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .quick-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 18px;
+            text-decoration: none;
+            color: var(--navy);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(232,0,29,0.32);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .quick-icon,
+        .feature-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(232,0,29,0.10);
+            color: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .quick-card h3,
+        .feature-card h3,
+        .info-card h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .quick-card p,
+        .feature-card p,
+        .info-card p,
+        .info-list li {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .feature-card {
+            padding: 20px;
+        }
+
+        .feature-card .feature-icon {
+            margin-bottom: 14px;
+        }
+
+        .info-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .info-card {
+            padding: 26px;
+        }
+
+        .info-card.highlight {
+            background: linear-gradient(135deg, var(--navy), #182c63);
+            color: var(--white);
+            border-color: transparent;
+        }
+
+        .info-card.highlight p,
+        .info-card.highlight .info-list li {
+            color: rgba(255,255,255,0.72);
+        }
+
+        .info-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .info-list li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .info-list li::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            margin-top: 7px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        .developer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            border-radius: 999px;
+            background: rgba(232,0,29,0.12);
+            color: var(--red);
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .developer-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .developer-photo {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top;
+            border: 3px solid var(--white);
+            box-shadow: var(--shadow);
+            flex-shrink: 0;
+        }
+
+        .developer-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .developer-name h3 {
+            margin-bottom: 0;
+        }
+
+        .email-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(232,0,29,0.10);
+            color: var(--red);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 17px;
+            transition: transform 0.2s, background 0.2s, color 0.2s;
+        }
+
+        .email-link:hover {
+            transform: translateY(-2px);
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .feedback-form {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .feedback-form input,
+        .feedback-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .feedback-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .feedback-form input:focus,
+        .feedback-form textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(232,0,29,0.08);
+        }
+
+        .footer {
+            background: var(--navy);
+            color: rgba(255,255,255,0.72);
+            padding: 24px 20px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 820px) {
+            nav {
+                height: auto;
+                min-height: 60px;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .nav-left {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .nav-menu {
+                order: 3;
+                width: 100%;
+                margin-left: 0;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .nav-user {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .quick-grid,
+            .feature-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .info-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .steps { grid-template-columns: 1fr; }
+            .stats { gap: 24px; }
+            nav { padding: 0 16px; }
+            .hero { padding: 36px 16px 72px; }
+            .form-body { padding: 20px; }
+            .developer-profile { align-items: flex-start; }
+            .quick-grid,
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 420px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .nav-welcome { display: none; }
+            .nav-user { gap: 6px; }
+            .nav-link,
+            .btn-logout,
+            .btn-signup { padding: 7px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="nav-left">
+        <a href="#home" class="nav-logo">Rent<span>Predict</span></a>
+        <div class="nav-menu" aria-label="Primary navigation">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#developer" class="nav-link">Developer</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#feedback" class="nav-link">Feedback</a>
+        </div>
+    </div>
+    <div class="nav-user">
+        {% if session.username %}
+            <span class="nav-welcome">Welcome, <strong>{{ session.username }}</strong></span>
+            {% if session.role == "owner" %}
+                <a href="/owner" class="nav-link">Owner</a>
+            {% endif %}
+            {% if session.role == "admin" %}
+                <a href="/admin" class="nav-link">Admin</a>
+            {% endif %}
+            <a href="/logout" class="btn-logout">Logout</a>
+        {% else %}
+            <a href="/login" class="nav-link">Login</a>
+            <a href="/signup" class="btn-signup">Signup</a>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="home">
+    <div class="hero-tag">🏠 AI-Powered Rent Prediction</div>
+    <h1>Find the <span>Right Rent</span><br>Before You Decide</h1>
+    <p>Get accurate rent estimates for any city in India using our machine learning model trained on real data.</p>
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-num">4,700+</div>
+            <div class="stat-label">Properties Trained</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">6 Cities</div>
+            <div class="stat-label">Covered</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">~79%</div>
+            <div class="stat-label">Prediction Accuracy</div>
+        </div>
+    </div>
+</div>
+
+<!-- FORM CARD -->
+<div class="form-wrapper">
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="icon">🔍</div>
+            <h2>Predict Your Rent — Fill in the Details Below</h2>
+        </div>
+
+        <div class="form-body">
+            <form method="post">
+
+                <!-- SECTION 1: Property Details -->
+                <div class="section-title">Property Details</div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+                        <label>Size (sqft)</label>
+                        <input type="number" name="size" placeholder="e.g. 1000" min="100" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label>BHK</label>
+                        <div class="select-wrap">
+                            <select name="bhk" required>
+                                <option value="">Select BHK</option>
+                                <option value="1">1 BHK</option>
+                                <option value="2">2 BHK</option>
+                                <option value="3">3 BHK</option>
+                                <option value="4">4 BHK</option>
+                                <option value="5">5 BHK</option>
+                                <option value="6">6 BHK</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Bathrooms</label>
+                        <div class="select-wrap">
+                            <select name="bathroom" required>
+                                <option value="">Select</option>
+                                <option value="1">1 Bathroom</option>
+                                <option value="2">2 Bathrooms</option>
+                                <option value="3">3 Bathrooms</option>
+                                <option value="4">4 Bathrooms</option>
+                                <option value="5">5 Bathrooms</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="form-divider">
+
+                <!-- SECTION 2: Location -->
+                <div class="section-title">Location</div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+                        <label>City</label>
+                        <div class="select-wrap">
+                            <select name="city" id="city" onchange="loadAreas()" required>
+                                <option value="">Select City</option>
+                                {% for c in cities %}
+                                    <option value="{{ c }}">{{ c }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field-group" style="grid-column: span 2;">
+                        <label>Search Area / Locality</label>
+                        <div class="area-search-box">
+                            <input
+                                type="text"
+                                id="areaInput"
+                                placeholder="Type area name (e.g. Whitefield)"
+                                onkeyup="searchArea()"
+                                autocomplete="off"
+                            >
+                        </div>
+                        <div class="select-wrap" style="margin-top:8px;">
+                            <select name="area" id="areaSelect" required>
+                                <option value="">Select city first</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="form-divider">
+
+                <!-- SECTION 3: Preferences -->
+                <div class="section-title">Preferences</div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+                        <label>Area Type</label>
+                        <div class="select-wrap">
+                            <select name="area_type">
+                                <option value="Super Area">Super Area</option>
+                                <option value="Carpet Area">Carpet Area</option>
+                                <option value="Built Area">Built Area</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Furnishing Status</label>
+                        <div class="select-wrap">
+                            <select name="furnishing">
+                                <option value="Furnished">Furnished</option>
+                                <option value="Semi-Furnished">Semi-Furnished</option>
+                                <option value="Unfurnished">Unfurnished</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-predict">
+                    Get Rent Prediction <span class="arrow">→</span>
+                </button>
+
+            </form>
+        </div>
+
+        <!-- TRUST BAR -->
+        <div class="trust-bar">
+            <div class="trust-item"><div class="dot"></div> ML-Powered Predictions</div>
+            <div class="trust-item"><div class="dot"></div> Real Dataset Trained</div>
+            <div class="trust-item"><div class="dot"></div> Instant Results</div>
+            <div class="trust-item"><div class="dot"></div> Free to Use</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- QUICK LINKS -->
+<section class="quick-links-section" aria-labelledby="quick-links-title">
+    <div class="section-heading">
+        <h2 id="quick-links-title">Quick Links</h2>
+        <p>Jump straight to the main areas of the website and understand what RentPredict offers.</p>
+    </div>
+    <div class="quick-grid">
+        <a class="quick-card" href="#home">
+            <span class="quick-icon">H</span>
+            <div>
+                <h3>Home</h3>
+                <p>Start a rent estimate with city, locality and property details.</p>
+            </div>
+        </a>
+        <a class="quick-card" href="#developer">
+            <span class="quick-icon">D</span>
+            <div>
+                <h3>Developer</h3>
+                <p>See the technology and project structure behind the website.</p>
+            </div>
+        </a>
+        <a class="quick-card" href="#about">
+            <span class="quick-icon">A</span>
+            <div>
+                <h3>About</h3>
+                <p>Learn how the prediction system supports rental decisions.</p>
+            </div>
+        </a>
+        <a class="quick-card" href="#feedback">
+            <span class="quick-icon">F</span>
+            <div>
+                <h3>Feedback</h3>
+                <p>Share comments and improvement ideas for the project.</p>
+            </div>
+        </a>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="content-section" aria-labelledby="features-title">
+    <div class="section-heading">
+        <h2 id="features-title">Built For Confident Renting</h2>
+        <p>A cleaner professional experience with useful details for users, owners and evaluators.</p>
+    </div>
+    <div class="feature-grid">
+        <article class="feature-card">
+            <div class="feature-icon">01</div>
+            <h3>Smart Estimate</h3>
+            <p>Uses trained data points and property features to calculate an expected monthly rent.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon">02</div>
+            <h3>Locality Search</h3>
+            <p>City-based locality filtering helps users select the correct area faster.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon">03</div>
+            <h3>Owner Friendly</h3>
+            <p>Owner and admin paths stay available from the navigation after login.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon">04</div>
+            <h3>Clear Workflow</h3>
+            <p>The homepage now guides users from prediction to understanding and feedback.</p>
+        </article>
+    </div>
+</section>
+
+<!-- DEVELOPER -->
+<section class="content-section" id="developer">
+    <div class="info-layout">
+        <article class="info-card highlight">
+            <span class="developer-badge">Developer</span>
+            <h3>Project Built With Practical Web And ML Features</h3>
+            <p>
+                RentPredict combines a Flask backend, SQLite user storage, a trained machine learning model
+                and a responsive frontend interface for rent prediction.
+            </p>
+            <ul class="info-list">
+                <li>Backend routes handle login, signup, prediction and owner dashboards.</li>
+                <li>The prediction form connects directly to the trained rent model.</li>
+                <li>The interface is structured with quick navigation and professional content sections.</li>
+            </ul>
+        </article>
+        <article class="info-card">
+            <div class="developer-profile">
+                <img
+                    src="{{ url_for('static', filename='images/sourav-nayak.png') }}"
+                    alt="Sourav Nayak"
+                    class="developer-photo"
+                >
+                <div>
+                    <div class="developer-name">
+                        <h3>Sourav Nayak</h3>
+                        <a class="email-link" href="mailto:nsourav686@gmail.com" aria-label="Email Sourav Nayak" title="nsourav686@gmail.com">&#9993;</a>
+                    </div>
+                    <p>Developer</p>
+                </div>
+            </div>
+            <h3>Recommended Next Improvements</h3>
+            <p>These additions would make the project stronger for a final presentation or portfolio.</p>
+            <ul class="info-list">
+                <li>Add a real feedback database table and admin review screen.</li>
+                <li>Add model accuracy charts and sample prediction comparisons.</li>
+                <li>Add contact details, project screenshots and deployment information.</li>
+            </ul>
+        </article>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="content-section" id="about">
+    <div class="info-layout">
+        <article class="info-card">
+            <h3>About RentPredict</h3>
+            <p>
+                RentPredict helps users estimate a fair rental price before making a decision. It uses
+                property size, BHK, bathrooms, city, locality, area type and furnishing status to create
+                a fast prediction.
+            </p>
+            <ul class="info-list">
+                <li>Helpful for tenants comparing rental options.</li>
+                <li>Useful for owners checking expected market pricing.</li>
+                <li>Simple enough for everyday users while still showing ML functionality.</li>
+            </ul>
+        </article>
+        <article class="info-card">
+            <h3>Why This Feels Professional</h3>
+            <p>
+                The updated page now has a clearer information architecture: navigation, quick links,
+                prediction, features, developer information, about content and feedback.
+            </p>
+        </article>
+    </div>
+</section>
+
+<!-- FEEDBACK -->
+<section class="content-section" id="feedback">
+    <div class="info-layout">
+        <article class="info-card">
+            <h3>Feedback</h3>
+            <p>
+                Share what worked well, what felt confusing, or which rental features should be added next.
+            </p>
+            <form class="feedback-form" onsubmit="handleFeedback(event)">
+                <input type="text" id="feedbackName" placeholder="Your name" required>
+                <input type="email" id="feedbackEmail" placeholder="Email address" required>
+                <textarea id="feedbackMessage" placeholder="Write your feedback" required></textarea>
+                <button type="submit" class="btn-predict">Send Feedback</button>
+            </form>
+        </article>
+        <article class="info-card highlight">
+            <h3>Thank You For Helping Improve The Project</h3>
+            <p>
+                Feedback is kept on the page for now. A database-backed feedback feature can be added next
+                so messages are saved and visible to admins.
+            </p>
+            <ul class="info-list">
+                <li>Suggest UI improvements.</li>
+                <li>Report prediction or locality issues.</li>
+                <li>Request new professional website sections.</li>
+            </ul>
+        </article>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+    <div class="how-title">How It Works</div>
+    <div class="steps">
+        <div class="step-card">
+            <div class="step-num">1</div>
+            <h3>Enter Details</h3>
+            <p>Fill in your property size, BHK, city and locality preferences.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">2</div>
+            <h3>AI Predicts</h3>
+            <p>Our Gradient Boosting model analyses 9 features to estimate rent.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">3</div>
+            <h3>Get Result</h3>
+            <p>Instantly see the predicted rent with a map view of your area.</p>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    RentPredict - Professional rent prediction website with ML-powered estimates and user-focused navigation.
+</footer>
+
+<script>
+let allAreas = [];
+
+function loadAreas() {
+    const city = document.getElementById("city").value;
+    const sel  = document.getElementById("areaSelect");
+    if (!city) return;
+
+    sel.innerHTML = "<option>Loading...</option>";
+
+    fetch(`/get_areas?city=${city}`)
+        .then(res => res.json())
+        .then(data => {
+            allAreas = data;
+            showAreas(allAreas);
+        });
+}
+
+function searchArea() {
+    const text     = document.getElementById("areaInput").value.toLowerCase();
+    const filtered = allAreas.filter(a => a.toLowerCase().includes(text));
+    showAreas(filtered);
+}
+
+function showAreas(areas) {
+    const sel  = document.getElementById("areaSelect");
+    sel.innerHTML = "";
+    if (areas.length === 0) {
+        sel.innerHTML = "<option>No areas found</option>";
+        return;
+    }
+    areas.forEach(a => {
+        const opt   = document.createElement("option");
+        opt.value   = a;
+        opt.text    = a;
+        sel.appendChild(opt);
+    });
+}
+
+function handleFeedback(event) {
+    event.preventDefault();
+    const name = document.getElementById("feedbackName").value.trim();
+    alert(`Thank you, ${name || "friend"}! Your feedback has been noted for the next version.`);
+    event.target.reset();
+}
+</script>
+
+</body>
+</html>

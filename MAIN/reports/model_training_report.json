@@ -1,0 +1,61 @@
+{
+  "best_model": {
+    "r2": 0.8733258190517923,
+    "mae": 5102.065358479883,
+    "rmse": 10060.648836152814,
+    "mape": 20.846302970515378,
+    "name": "Optimized GradientBoosting Reduced Features",
+    "model_name": "GradientBoosting",
+    "encoding": "target",
+    "outlier_method": "percentile_02_97",
+    "log_target": true,
+    "cv5_r2": 0.8472510644366537,
+    "cv10_r2": 0.8511065581371693
+  },
+  "feature_importance": [
+    {
+      "feature": "Area Locality",
+      "importance": 0.5140076845376567
+    },
+    {
+      "feature": "Bathroom",
+      "importance": 0.11045301334879754
+    },
+    {
+      "feature": "Log_size",
+      "importance": 0.07907197696719998
+    },
+    {
+      "feature": "BHK",
+      "importance": 0.069179922695259
+    },
+    {
+      "feature": "Size",
+      "importance": 0.05610203954718322
+    },
+    {
+      "feature": "City",
+      "importance": 0.05460632988946253
+    },
+    {
+      "feature": "Point of Contact",
+      "importance": 0.042555773878001836
+    },
+    {
+      "feature": "Total Floors",
+      "importance": 0.03121856607072952
+    },
+    {
+      "feature": "Size_per_room",
+      "importance": 0.020331279327173844
+    },
+    {
+      "feature": "Current Floor",
+      "importance": 0.011811711366458179
+    },
+    {
+      "feature": "Furnishing Status",
+      "importance": 0.010661702372077758
+    }
+  ]
+}

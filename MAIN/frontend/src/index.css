@@ -1,0 +1,301 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen overflow-x-hidden bg-brand-sky text-brand-navy antialiased;
+  }
+
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy outline-none transition duration-200 focus:-translate-y-0.5 focus:border-brand-red focus:ring-4 focus:ring-red-100 disabled:cursor-not-allowed disabled:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-red-400 dark:focus:ring-red-950/60;
+  }
+
+  label {
+    @apply text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply min-h-screen animate-page-in bg-brand-sky transition-colors duration-300 dark:bg-slate-950;
+  }
+
+  .panel {
+    @apply rounded-lg bg-white shadow-soft ring-1 ring-slate-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-lift dark:bg-slate-900 dark:ring-slate-800 dark:hover:shadow-none;
+  }
+
+  .premium-card {
+    @apply rounded-lg border border-slate-200/80 bg-white p-5 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-red-200 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900 dark:hover:border-red-900/80 dark:hover:shadow-none;
+  }
+
+  .dashboard-sidebar {
+    @apply fixed inset-y-0 left-0 z-50 flex w-[22rem] max-w-[calc(100vw-1rem)] -translate-x-[110%] flex-col overflow-y-auto border-r border-white/10 bg-brand-navy px-4 py-5 text-white shadow-lift transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)];
+    background-image: radial-gradient(circle at 18% 8%, rgba(232, 0, 29, 0.23), transparent 31%);
+  }
+
+  .dashboard-sidebar.sidebar-open {
+    @apply translate-x-0;
+  }
+
+  .sidebar-backdrop {
+    @apply fixed inset-0 z-40 cursor-default border-0 bg-slate-950/65 opacity-0 backdrop-blur-sm transition-opacity duration-500 pointer-events-none;
+  }
+
+  .sidebar-backdrop.is-open {
+    @apply pointer-events-auto opacity-100;
+  }
+
+  .sidebar-reveal {
+    opacity: 0;
+    transform: translateX(-18px);
+    transition: opacity 420ms ease, transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .dashboard-sidebar.sidebar-open .sidebar-reveal {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .sidebar-user-card {
+    @apply flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/10 p-3 text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:border-red-300/30 hover:bg-white/[0.14];
+  }
+
+  .sidebar-setting {
+    @apply flex min-h-14 w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 text-left text-sm text-white transition duration-300 hover:border-white/20 hover:bg-white/10;
+  }
+
+  .sidebar-logout {
+    @apply flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-red-300/25 bg-red-500/10 px-3 py-2 text-sm font-extrabold text-red-100 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-red hover:text-white hover:shadow-red;
+  }
+
+  .theme-switch {
+    @apply flex h-6 w-10 shrink-0 rounded-full bg-white/15 p-1 shadow-inner;
+  }
+
+  .theme-switch span {
+    @apply size-4 rounded-full bg-white shadow-sm transition-transform duration-300;
+  }
+
+  .menu-button {
+    @apply grid size-10 shrink-0 place-items-center rounded-xl bg-white/10 text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/15 hover:shadow-lg;
+  }
+
+  .dashboard-link {
+    @apply flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold text-white/70 transition hover:bg-white/10 hover:text-white;
+  }
+
+  .dashboard-link.active {
+    @apply bg-brand-red text-white shadow-red;
+  }
+
+  .primary-button {
+    @apply relative inline-flex min-h-11 items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-red px-5 py-3 text-sm font-bold text-white shadow-red transition duration-300 hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-red-lg active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .secondary-button {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-brand-navy transition duration-300 hover:-translate-y-0.5 hover:border-brand-red hover:text-brand-red hover:shadow-md active:translate-y-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-red-500 dark:hover:text-red-300;
+  }
+
+  .auth-background {
+    background:
+      linear-gradient(135deg, rgba(5, 15, 35, 0.9), rgba(10, 25, 55, 0.8), rgba(0, 0, 0, 0.72)),
+      url("/static/images/images.jpg") center / cover no-repeat;
+    background-attachment: fixed;
+  }
+
+  .hero-visual {
+    background:
+      linear-gradient(115deg, rgba(13, 27, 62, 0.96), rgba(13, 27, 62, 0.82) 48%, rgba(232, 0, 29, 0.72)),
+      url("/static/images/images.jpg") center / cover no-repeat;
+  }
+
+  .mesh-overlay {
+    @apply pointer-events-none absolute inset-0 opacity-30;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 44px 44px;
+    animation: grid-drift 24s linear infinite;
+  }
+
+  .glass-panel {
+    @apply rounded-lg border border-white/15 bg-white/10 shadow-soft backdrop-blur-md;
+  }
+
+  .form-section {
+    @apply rounded-lg border border-slate-200/80 bg-slate-50/60 p-4 transition duration-300 hover:border-red-100 hover:bg-white dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-red-950 dark:hover:bg-slate-900;
+  }
+
+  .welcome-marquee {
+    @apply mx-auto max-w-4xl overflow-hidden rounded-lg border border-white/20 bg-white/10 py-3 text-sm font-bold tracking-wide text-white shadow-lg backdrop-blur;
+  }
+
+  .welcome-marquee__track {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    animation: welcome-scroll 16s linear infinite;
+  }
+
+  .welcome-marquee__track span {
+    padding-right: 5rem;
+  }
+
+  .market-slide-card {
+    animation: market-slide-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .animate-delay-600 {
+    animation-delay: 600ms;
+  }
+}
+
+@layer utilities {
+  .animate-page-in {
+    animation: page-in 520ms ease both;
+  }
+
+  .animate-rise {
+    animation: rise-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-soft-float {
+    animation: soft-float 5.5s ease-in-out infinite;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2.6s ease-out infinite;
+  }
+
+  .animate-card-pop {
+    animation: card-pop 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes card-pop {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(232, 0, 29, 0.26);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(232, 0, 29, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 0, 29, 0);
+  }
+}
+
+@keyframes grid-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 44px 44px;
+  }
+}
+
+@keyframes market-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(34px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes welcome-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}

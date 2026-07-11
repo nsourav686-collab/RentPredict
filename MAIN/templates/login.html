@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Rent Prediction</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background:
+                linear-gradient(135deg,
+                    rgba(5, 15, 35, 0.85),
+                    rgba(10, 25, 55, 0.75),
+                    rgba(0, 0, 0, 0.65)),
+                url('https://images.unsplash.com/photo-1600585154526-990dced4db0d');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            position: relative;
+            animation: bgZoom 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes bgZoom {
+            0% {
+                background-size: 100%;
+            }
+
+            100% {
+                background-size: 110%;
+            }
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 198, 255, 0.15);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        body::before {
+            width: 250px;
+            height: 250px;
+            top: 10%;
+            left: 10%;
+        }
+
+        body::after {
+            width: 180px;
+            height: 180px;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* LEFT FEATURE PANEL */
+        .feature-box {
+            width: 390px;
+            padding: 25px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+        }
+
+        .feature-box h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #00c6ff;
+        }
+
+        .feature-box ul {
+            list-style: none;
+        }
+
+        .feature-box li {
+            font-size: 16px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* ORIGINAL PREMIUM LOGIN BOX */
+        .login-box {
+            width: 390px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg,
+                    rgba(15, 25, 55, 0.85),
+                    rgba(10, 15, 35, 0.92));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 25px;
+            color: white;
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.45),
+                0 0 25px rgba(0, 198, 255, 0.12),
+                inset 0 0 20px rgba(255, 255, 255, 0.03);
+
+            animation: fadeUp 1s ease;
+            transition: 0.4s;
+        }
+
+        .login-box:hover {
+            transform: translateY(-8px);
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.55),
+                0 0 35px rgba(0, 198, 255, 0.20);
+        }
+
+        .login-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 25px;
+            padding: 2px;
+            background: linear-gradient(135deg,
+                    rgba(0, 198, 255, 0.8),
+                    rgba(23, 105, 255, 0.5),
+                    rgba(255, 255, 255, 0.2));
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+
+        }
+        .login-box::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.18),
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: shine 3s infinite;
+}
+
+
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 28px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-box p {
+            text-align: center;
+            color: #ddd;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 14px;
+            transition: 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        input:focus {
+            transform: scale(1.03);
+            box-shadow: 0 0 18px rgba(0, 198, 255, 0.6);
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1769ff, #00c6ff);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            z-index: 2;
+        }
+
+        button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 198, 255, 0.6);
+        }
+
+        .google-btn {
+            margin-top: 15px;
+            background: linear-gradient(90deg, #ffffff22, #ffffff11);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .extra-links {
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .extra-links p {
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
+        .extra-links a {
+            color: #00c6ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .flash {
+            background: rgba(255, 77, 77, 0.9);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes shine {
+    0% {
+        left: -60%;
+    }
+    100% {
+        left: 140%;
+    }
+}
+
+        @media(max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .feature-box,
+            .login-box {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- LEFT FEATURE PANEL -->
+        <div class="feature-box">
+            <h2>Things you Can Do with Our Platform</h2>
+
+            <ul>
+                <li>✔ Post your Property for FREE</li>
+                <li>✔ Get AI-based Rent Price Prediction</li>
+                <li>✔ Access Verified Property Listings</li>
+                <li>✔ Showcase Property for Rent or Sale</li>
+                <li>✔ Receive Queries via Phone & Email</li>
+                <li>✔ Track Property Views & Responses</li>
+                <li>✔ Add Detailed Property Info & Photos</li>
+                <li>✔ Smart Search with Filters</li>
+                <li>✔ Owner Dashboard Access</li>
+                <li>✔ Secure Login & Account Management</li>
+            </ul>
+        </div>
+
+        <!-- ORIGINAL LOGIN BOX -->
+        <div class="login-box">
+
+            <h1>Rent Prediction</h1>
+            <p>Login to access your account</p>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash">
+                {{ messages[0] }}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter username" required>
+
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter password" required>
+                <button type="submit">Login</button>
+
+            </form>
+
+            <a href="/google-login">
+                <button type="button" class="google-btn">Continue with Google</button>
+            </a>
+
+            <div class="extra-links">
+                <p>Don't have an account?</p>
+                <a href="/signup">Create Account</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

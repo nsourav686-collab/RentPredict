@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predicted Room Rent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* background: linear-gradient(90deg, #1769ff, #00c6ff); */
+            
+            margin: 0;
+            padding: 0;
+        }
+
+        .result-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            /* Button color as main background accent */
+            background: linear-gradient(135deg, #f3aa21 0%, #64B5F6 100%);
+            border-radius: 15px;
+        }
+
+        /* Flex layout */
+        .flex-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .card, #map, #rent-alert {
+            flex: 1 1 300px;
+            background: #fff; /* inside box is white */
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #2196F3; /* consistent with Predict Rent button */
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover, #map:hover, #rent-alert:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .card {
+            text-align: center;
+        }
+
+        .rent-amount {
+            font-size: 38px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #2196F3; /* matching button color */
+        }
+
+        .btn-again {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 15px;
+             background: linear-gradient(135deg, #2136f3 0%, #f664d2 100%); /* same as Predict Rent button */
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn-again:hover { background: #1976D2; }
+
+        #map {
+            height: 400px;
+            border-top-color: #2196F3;
+        }
+
+        #rent-alert {
+            border-top-color: #2196F3;
+        }
+
+        #rent-alert form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #rent-alert input, #rent-alert button {
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #rent-alert input:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 8px rgba(33, 150, 243, 0.3);
+            outline: none;
+        }
+
+        #rent-alert button {
+            background: linear-gradient(135deg, #2136f3 0%, #f664d2 100%); /* same button color */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #rent-alert button:hover { background-color: #1976D2; }
+
+        .edit-section {
+            margin-top: 20px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #2196F3;
+        }
+
+        .charts-section {
+            margin-top: 20px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #2196F3;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            border-bottom: 1px solid #e3e9f4;
+            padding-bottom: 16px;
+            margin-bottom: 18px;
+        }
+
+        .chart-header h2 {
+            text-align: left;
+            margin: 0;
+            color: #0d1b3e;
+        }
+
+        .chart-header p {
+            margin-top: 6px;
+            color: #607089;
+            line-height: 1.5;
+        }
+
+        .chart-badge {
+            border-radius: 999px;
+            background: #eef5ff;
+            color: #1769ff;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .metric-grid,
+        .chart-grid,
+        .area-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .metric-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-bottom: 18px;
+        }
+
+        .chart-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .area-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            margin-top: 14px;
+        }
+
+        .metric-card,
+        .chart-card,
+        .area-card {
+            border: 1px solid #e3e9f4;
+            border-radius: 12px;
+            background: #f8fbff;
+            padding: 14px;
+        }
+
+        .metric-label,
+        .bar-label,
+        .area-label {
+            font-size: 12px;
+            color: #607089;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .metric-value,
+        .area-value {
+            margin-top: 6px;
+            color: #0d1b3e;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .chart-card h3 {
+            margin: 0;
+            color: #0d1b3e;
+            font-size: 17px;
+        }
+
+        .chart-card p {
+            min-height: 42px;
+            margin: 6px 0 14px;
+            color: #607089;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .bar-row {
+            margin-top: 12px;
+        }
+
+        .bar-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #607089;
+        }
+
+        .bar-track {
+            height: 10px;
+            background: #e8eef8;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            min-width: 8%;
+            background: #1769ff;
+            border-radius: 999px;
+        }
+
+        .bar-row.active .bar-fill {
+            background: #e8001d;
+        }
+
+        .bar-row.active .bar-value {
+            color: #e8001d;
+        }
+
+        .area-card.active {
+            border-color: #ffc2c8;
+            background: #fff1f3;
+            color: #e8001d;
+        }
+
+        .edit-section h2 {
+            margin-top: 0;
+        }
+
+        .edit-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .edit-grid label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #455a64;
+        }
+
+        .edit-grid input,
+        .edit-grid select {
+            width: 100%;
+            padding: 11px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .edit-button {
+            width: 100%;
+            margin-top: 16px;
+            padding: 13px;
+            border: 0;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2136f3 0%, #f664d2 100%);
+        }
+
+        @media(max-width: 900px){
+            .flex-layout {
+                flex-direction: column;
+            }
+
+            .metric-grid,
+            .chart-grid,
+            .area-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .edit-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media(max-width: 560px){
+            .chart-header {
+                flex-direction: column;
+            }
+
+            .metric-grid,
+            .chart-grid,
+            .area-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="result-container">
+    <div class="flex-layout">
+        <!-- Predicted Rent Card -->
+        <div class="card">
+            <h1>🏠 Predicted Room Rent</h1>
+            <p>Estimated Rent</p>
+            <div class="rent-amount">₹ {{ rent }}</div>
+            <a href="/" class="btn-again">🔁 Predict Again</a>
+        </div>
+
+        <!-- Leaflet Map -->
+        <div id="map"></div>
+
+        <!-- Rent Alert Form -->
+        <section id="rent-alert">
+            <h2>🔔 Set Rent Alert</h2>
+            <form action="/set_alert" method="POST">
+                <input type="text" name="area" placeholder="Enter Area" required value="{{ area }}">
+                <input type="number" name="budget" placeholder="Max Rent" required>
+                <input type="email" name="email" placeholder="Enter Email" required>
+                <button type="submit">Set Alert</button>
+            </form>
+        </section>
+    </div>
+
+    <section class="charts-section">
+        <div class="chart-header">
+            <div>
+                <h2>Prediction Market Charts</h2>
+                <p>Charts use the main CSV dataset for {{ market_insights.summary.scope or area }}, compared with your predicted rent.</p>
+            </div>
+            <span class="chart-badge">{{ market_insights.summary.records or 0 }} area records</span>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-label">Area average</div>
+                <div class="metric-value">Rs {{ market_insights.summary.area_average or 0 }}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Area median</div>
+                <div class="metric-value">Rs {{ market_insights.summary.area_median or 0 }}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Per sqft avg</div>
+                <div class="metric-value">Rs {{ market_insights.summary.rent_per_sqft or 0 }}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Affordability</div>
+                <div class="metric-value">{{ market_insights.summary.prediction_band or "N/A" }}</div>
+            </div>
+        </div>
+
+        <div class="chart-grid" id="chartGrid"></div>
+
+        <h2 style="text-align:left; font-size:17px; margin:22px 0 0;">High-rent localities in {{ city }}</h2>
+        <div class="area-grid" id="areaGrid"></div>
+    </section>
+
+    <section class="edit-section">
+        <h2>Edit Details And Update Prediction</h2>
+        <form action="/" method="POST">
+            <div class="edit-grid">
+                <div>
+                    <label>Size (sqft)</label>
+                    <input type="number" name="size" min="100" required value="{{ size }}">
+                </div>
+                <div>
+                    <label>BHK</label>
+                    <select name="bhk" required>
+                        {% for item in [1, 2, 3, 4, 5, 6] %}
+                            <option value="{{ item }}" {% if bhk == item %}selected{% endif %}>{{ item }} BHK</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Bathrooms</label>
+                    <select name="bathroom" required>
+                        {% for item in [1, 2, 3, 4, 5] %}
+                            <option value="{{ item }}" {% if bathroom == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>City</label>
+                    <input type="text" name="city" required value="{{ city }}">
+                </div>
+                <div>
+                    <label>Area / Locality</label>
+                    <input type="text" name="area" required value="{{ area }}">
+                </div>
+                <div>
+                    <label>Area Type</label>
+                    <select name="area_type">
+                        {% for item in ["Super Area", "Carpet Area", "Built Area"] %}
+                            <option value="{{ item }}" {% if area_type == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Furnishing</label>
+                    <select name="furnishing">
+                        {% for item in ["Furnished", "Semi-Furnished", "Unfurnished"] %}
+                            <option value="{{ item }}" {% if furnishing == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button class="edit-button" type="submit">Update Prediction</button>
+        </form>
+    </section>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const marketInsights = {{ market_insights | tojson }};
+
+    function formatRs(value) {
+        return `Rs ${Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
+    }
+
+    function renderBars(items, showCount) {
+        const highest = Math.max(...items.map(item => Number(item.value) || 0), 1);
+        return items.map(item => {
+            const width = Math.max(8, ((Number(item.value) || 0) / highest) * 100);
+            const value = showCount ? `${item.value} homes` : formatRs(item.value);
+            return `
+                <div class="bar-row ${item.active ? "active" : ""}">
+                    <div class="bar-top">
+                        <span class="bar-label">${item.label}</span>
+                        <span class="bar-value">${value}</span>
+                    </div>
+                    <div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    const chartCards = [
+        ["Rent Comparison", "Predicted rent against selected area and city averages.", marketInsights.rent_comparison || [], false],
+        ["Affordability Bands", "City records split into affordable, moderate and premium groups.", marketInsights.affordability || [], true],
+        ["BHK Trend", "Average rent by BHK using the selected area when possible.", marketInsights.bhk_trend || [], false],
+        ["Furnishing Impact", "Average rent by furnishing status in the matching market.", marketInsights.furnishing || [], false]
+    ];
+
+    document.getElementById("chartGrid").innerHTML = chartCards.map(([title, text, items, showCount]) => `
+        <article class="chart-card">
+            <h3>${title}</h3>
+            <p>${text}</p>
+            ${renderBars(items, showCount)}
+        </article>
+    `).join("");
+
+    document.getElementById("areaGrid").innerHTML = (marketInsights.area_samples || []).map(item => `
+        <div class="area-card ${item.active ? "active" : ""}">
+            <div class="area-label">${item.label}</div>
+            <div class="area-value">${formatRs(item.value)}</div>
+            <div class="area-label">${item.count} records</div>
+        </div>
+    `).join("");
+</script>
+<script>
+    // Initialize map
+    var map = L.map('map').setView([22.5726, 88.3639], 12);
+
+    // Add OSM tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Dynamic Geocoding for area + city
+    var query = "{{ area }}, {{ city }}";
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+    .then(response => response.json())
+    .then(data => {
+        if(data && data.length > 0){
+            var lat = data[0].lat;
+            var lon = data[0].lon;
+            var predictedLatLng = [lat, lon];
+            map.setView(predictedLatLng, 14);
+            L.marker(predictedLatLng).addTo(map)
+                .bindPopup("Predicted Area: {{ area }}, {{ city }}")
+                .openPopup();
+        } else {
+            alert("Could not locate the area on the map. Showing default location.");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error fetching map location. Showing default location.");
+    });
+</script>
+
+</body>
+</html>

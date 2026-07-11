@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup | Rent Prediction</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(5, 15, 35, 0.85),
+                    rgba(10, 25, 55, 0.75),
+                    rgba(0, 0, 0, 0.65)
+                ),
+                url('https://images.unsplash.com/photo-1600585154526-990dced4db0d');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            position: relative;
+            animation: bgZoom 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes bgZoom {
+            0% { background-size: 100%; }
+            100% { background-size: 110%; }
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0,198,255,0.15);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        body::before {
+            width: 250px;
+            height: 250px;
+            top: 10%;
+            left: 10%;
+        }
+
+        body::after {
+            width: 180px;
+            height: 180px;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-box {
+            width: 390px;
+            padding: 25px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+        }
+
+        .feature-box h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #00c6ff;
+        }
+
+        .feature-box ul {
+            list-style: none;
+        }
+
+        .feature-box li {
+            font-size: 16px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .signup-box {
+            width: 400px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                rgba(15, 25, 55, 0.85),
+                rgba(10, 15, 35, 0.92)
+            );
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 25px;
+            color: white;
+            box-shadow:
+                0 12px 40px rgba(0,0,0,0.45),
+                0 0 25px rgba(0,198,255,0.12),
+                inset 0 0 20px rgba(255,255,255,0.03);
+            animation: fadeUp 1s ease;
+            transition: 0.4s;
+        }
+
+        .signup-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 25px;
+            padding: 2px;
+            background: linear-gradient(
+                135deg,
+                rgba(0,198,255,0.8),
+                rgba(23,105,255,0.5),
+                rgba(255,255,255,0.2)
+            );
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .signup-box::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.18),
+                transparent
+            );
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            0% { left: -60%; }
+            100% { left: 140%; }
+        }
+                .signup-box h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 28px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .signup-box p {
+            text-align: center;
+            color: #ddd;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 14px;
+            transition: 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        select option {
+            color: black;
+        }
+
+        input:focus, select:focus {
+            transform: scale(1.03);
+            box-shadow: 0 0 18px rgba(0,198,255,0.6);
+            background: rgba(255,255,255,0.22);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1769ff, #00c6ff);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            z-index: 2;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,198,255,0.5);
+        }
+
+        .extra-links {
+            text-align: center;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .extra-links a {
+            color: #00c6ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .flash {
+            background: rgba(255, 77, 77, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media(max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .feature-box,
+            .signup-box {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT FEATURE PANEL -->
+    <div class="feature-box">
+        <h2>Join Our Platform</h2>
+
+        <ul>
+            <li>✔ Search Rental Properties</li>
+            <li>✔ Post Property as Owner</li>
+            <li>✔ AI-based Rent Prediction</li>
+            <li>✔ Smart Filters & Verified Listings</li>
+            <li>✔ Secure Dashboard Access</li>
+            <li>✔ Easy Property Management</li>
+            <li>✔ Real-time Query Notifications</li>
+        </ul>
+    </div>
+
+    <!-- SIGNUP BOX -->
+    <div class="signup-box">
+
+        <h1>Create Account</h1>
+        <p>Signup to continue</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+                        <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm password" required>
+
+            <label>Select Role</label>
+            <select name="role" required>
+                <option value="">Choose Role</option>
+                <option value="user">For Rent</option>
+                <option value="owner">Owner</option>
+            </select>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="extra-links">
+            <p>Already have an account?</p>
+            <a href="/login">Login Here</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
