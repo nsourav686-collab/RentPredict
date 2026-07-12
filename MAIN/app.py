@@ -1,5 +1,6 @@
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify, redirect, session, flash, url_for
+from flask_cors import CORS
 from email.message import EmailMessage
 import json
 import os
@@ -41,6 +42,15 @@ app = Flask(
     template_folder=str(BASE_DIR / "templates"),
     static_folder=str(BASE_DIR / "static")
 )
+
+CORS(
+    app,
+    supports_credentials=True,
+    origins=[
+        "https://rent-predict.vercel.app"
+    ]
+)
+
 app.secret_key = "secret123"
 
 # -----------------------------
