@@ -73,9 +73,9 @@ RentPredict/
 ```
 
 ## 👨‍💻 Developer
-Jibandip Patra
-Ananya Chowdhury 
-Sourav Nayak
+Jibandip Patra,
+Ananya Chowdhury,
+Sourav Nayak,
 Parichay Barman
 B.Tech Information Technology
 
