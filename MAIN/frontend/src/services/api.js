@@ -1,3 +1,5 @@
+const API_BASE_URL = "https://rentpredict.onrender.com";
+
 async function parseResponse(response) {
   const contentType = response.headers.get("content-type") || "";
   const data = contentType.includes("application/json")
@@ -12,7 +14,7 @@ async function parseResponse(response) {
 }
 
 export async function apiGet(path) {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     credentials: "include"
   });
 
@@ -20,7 +22,7 @@ export async function apiGet(path) {
 }
 
 export async function apiPost(path, payload) {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -33,7 +35,7 @@ export async function apiPost(path, payload) {
 }
 
 export async function apiPut(path, payload) {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -46,7 +48,7 @@ export async function apiPut(path, payload) {
 }
 
 export async function apiPatch(path, payload) {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "PATCH",
     credentials: "include",
     headers: {
@@ -59,7 +61,7 @@ export async function apiPatch(path, payload) {
 }
 
 export async function apiDelete(path) {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "DELETE",
     credentials: "include"
   });
