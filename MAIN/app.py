@@ -45,10 +45,15 @@ app = Flask(
 
 CORS(
     app,
+    resources={
+        r"/api/*": {
+            "origins": [
+                "https://rent-predict.vercel.app"
+            ]
+        }
+    },
     supports_credentials=True,
-    origins=[
-        "https://rent-predict.vercel.app"
-    ]
+    methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 )
 
 app.secret_key = "secret123"
