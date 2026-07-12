@@ -57,6 +57,10 @@ CORS(
 )
 
 app.secret_key = "secret123"
+app.config.update(
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=True
+)
 
 # -----------------------------
 # Google OAuth Setup
