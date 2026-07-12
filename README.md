@@ -1,10 +1,8 @@
-# 🏠 RentPredict – AI-Based Room Rent Prediction System
-
-## 📌 Overview
+# 🏠 RentPredict – AI-Based Room Rent Prediction System 📌 Overview
 
 RentPredict is an AI-powered web application that predicts house rent based on property details and location using Machine Learning.
 
-## ✨ Features
+✨ Features
 
 - 🔐 User Registration & Login
 - 🔑 Google OAuth Login
@@ -17,9 +15,9 @@ RentPredict is an AI-powered web application that predicts house rent based on p
 - 🛠️ Admin Dashboard
 - 📱 Responsive Design
 
-## 🛠️ Technologies Used
+ 🛠️ Technologies Used
 
-### Frontend
+ Frontend
 - React.js
 - Vite
 - HTML5
