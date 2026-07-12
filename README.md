@@ -73,9 +73,10 @@ RentPredict/
 ```
 
 ## 👨‍💻 Developer
-
-**Sourav Nayak**
-
+Jibandip Patra
+Ananya Chowdhury 
+Sourav Nayak
+Parichay Barman
 B.Tech Information Technology
 
 Meghnad Saha Institute of Technology
