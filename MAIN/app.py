@@ -818,7 +818,63 @@ def api_areas():
 
     return jsonify({"areas": result})
 
+@app.route("/api/market-insights/<city>")
+def api_market_insights(city):
+    try:
+        df_city = data[data["City"].str.lower() == city.lower()].copy()
 
+        if df_city.empty:
+            return jsonify({
+                "city": city,
+                "summary": {
+                    "min_rent": 0,
+                    "avg_rent": 0,
+                    "max_rent": 0,
+                    "total_properties": 0
+                },
+                "areas": []
+            })
+
+        df_city["Rent"] = pd.to_numeric(df_city["Rent"], errors="coerce")
+        df_city = df_city.dropna(subset=["Rent"])
+
+        grouped = (
+            df_city.groupby("Area Locality")
+            .agg(
+                min_rent=("Rent", "min"),
+                avg_rent=("Rent", "mean"),
+                max_rent=("Rent", "max"),
+                total_properties=("Rent", "count")
+            )
+            .reset_index()
+            .sort_values("avg_rent")
+        )
+
+        areas = []
+
+        for _, row in grouped.iterrows():
+            areas.append({
+                "area": row["Area Locality"],
+                "min_rent": round(float(row["min_rent"]), 2),
+                "avg_rent": round(float(row["avg_rent"]), 2),
+                "max_rent": round(float(row["max_rent"]), 2),
+                "total_properties": int(row["total_properties"])
+            })
+
+        return jsonify({
+            "city": city,
+            "summary": {
+                "min_rent": round(float(df_city["Rent"].min()), 2),
+                "avg_rent": round(float(df_city["Rent"].mean()), 2),
+                "max_rent": round(float(df_city["Rent"].max()), 2),
+                "total_properties": int(len(df_city))
+            },
+            "areas": areas
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 @app.route("/api/signup", methods=["POST"])
 def api_signup():
     payload = request_payload()
